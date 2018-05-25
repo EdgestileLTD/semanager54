@@ -2,7 +2,7 @@
 //| import 'pages/images/images-gallery-modal.tag'
 
 
-product-edit-images
+list-images
     .row
         .col-md-12
             catalog-static(name='{ opts.name }', cols='{ cols }', rows='{ value }', handlers='{ handlers }',
@@ -14,7 +14,7 @@ product-edit-images
                             |  Добавить
                 #{'yield'}(to='body')
                     datatable-cell(name='')
-                        img(src!='{ app.getImageUrl("/"+row.imagePath) }', height='64px', width='64px')
+                        img(src!='{ row.imageUrlPreview }', height='64px')
                     datatable-cell(name='')
                         p.form-control-static { row.imagePath }
                         input.form-control(value='{ row.alt }', onchange='{ handlers.imageAltChange }')
@@ -54,11 +54,13 @@ product-edit-images
                 submit: function () {
                     let filemanager = this.tags.filemanager
                     let items = filemanager.getSelectedFiles()
-                    let path = filemanager.path
+                    let path = filemanager.path.replace(/^\//, '')
 
                     items.forEach(item => {
                         self.value.push({
-                            imagePath: app.clearRelativeLink(`${path}/${item.name}`)
+                            alt: self.parent.item.name,
+                            imagePath: app.clearRelativeLink(`${path}/${item.name}`),
+                            imageUrlPreview: app.getImagePreviewURL(`${path}/${item.name}`)
                         })
                     })
 

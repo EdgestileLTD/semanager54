@@ -3,18 +3,13 @@ products-list-select-modal
 		#{'yield'}(to="title")
 			.h4.modal-title Товары
 		#{'yield'}(to="body")
-			catalog(object='Product', cols='{ parent.cols }', search='true', reload='true', sortable='true',
-				dblclick='{ parent.opts.submit.bind(this) }', systemfilters='{ parent.opts.systemFilters }',
-				disable-limit='1', disable-col-select='1')
+			catalog(object='Product', cols='{ parent.cols }', search='true', reload='true', sortable='true')
 				#{'yield'}(to='body')
 					datatable-cell(name='id') { row.id }
+					datatable-cell(name='code') { row.code }
 					datatable-cell(name='article') { row.article }
 					datatable-cell(name='name') { row.name }
-					datatable-cell.text-right(name='price')
-						| {row.nameFront !== null && row.nameFront !== "" ? row.nameFront : ""}
-						span  { (row.price / 1).toFixed(2) }
-						|  { row.nameFront !== null && row.nameFront !== "" ? "" : row.nameFlang !== null && row.nameFlang !== "" ? row.nameFlang : row.titleCurr }
-
+					datatable-cell(name='price') { row.price }
 		#{'yield'}(to='footer')
 			button(onclick='{ modalHide }', type='button', class='btn btn-default btn-embossed') Закрыть
 			button(onclick='{ parent.opts.submit.bind(this) }', type='button', class='btn btn-primary btn-embossed') Выбрать
@@ -24,7 +19,9 @@ products-list-select-modal
 
 		self.cols = [
 			{name: 'id', value: '#'},
+			{name: 'code', value: 'Код'},
 			{name: 'article', value: 'Артикул'},
 			{name: 'name', value: 'Наименование'},
 			{name: 'price', value: 'Цена'},
 		]
+

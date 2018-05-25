@@ -2,17 +2,17 @@ product-edit-parameters
     .row
         .col-md-12
             catalog-static(name='{ opts.name }', add='{ addParameters }', handlers='{ parametersHandlers }',
-            cols='{ parametersCols }', rows='{ value }', responsive='false', remove='true')
+            cols='{ parametersCols }', rows='{ value }', responsive='false')
                 #{'yield'}(to='toolbar')
                     #{'yield'}(from='toolbar')
                 #{'yield'}(to='body')
                     datatable-cell(name='name') { row.name }
                     datatable-cell(name='value')
-                        input.form-control(if='{ row.type == "number" }', value='{ row.valueNumber }', type='number', min='0.00',
+                        input.form-control(if='{ row.type == "number" }', value='{ row.value }', type='number', min='0.00',
                         oninput='{ handlers.changeValue }')
                         i.fa.fa-fw(if='{ row.type == "bool" }', onclick='{ handlers.toggleCheckbox }',
-                        class='{ row.valueBool ? "fa-check-square-o" : "fa-square-o" }')
-                        input.form-control(if='{ row.type == "string" }', value='{ row.valueString }', type='text',
+                        class='{ row.value ? "fa-check-square-o" : "fa-square-o" }')
+                        input.form-control(if='{ row.type == "string" }', value='{ row.value }', type='text',
                         oninput='{ handlers.changeValue }')
                         autocomplete(if='{ row.type == "colorlist" }', load-data='{ handlers.getOptions(row.idFeature) }',
                         value='{ row.idValue }', value-field='value', id-field='id', onchange='{ handlers.changeColorValue }')
@@ -54,16 +54,14 @@ product-edit-parameters
                     })
 
                     items.forEach(function (item) {
-                      //  if (ids.indexOf(item.id) === -1) {
+                        if (ids.indexOf(item.id) === -1) {
                             self.value.push({
                                 idFeature: item.id,
                                 name: item.name,
                                 type: item.type
                             })
-                        //}
+                        }
                     })
-
-
 
                     let event = document.createEvent('Event')
                     event.initEvent('change', true, true)
@@ -75,7 +73,6 @@ product-edit-parameters
             })
         }
 
-        // Параметры Обработчики
         self.parametersHandlers = {
             getOptions(id) {
                 var id = id
@@ -99,32 +96,18 @@ product-edit-parameters
                     })
                 }
             },
-            // переключатель
             toggleCheckbox(e) {
-                this.row.valueBool = !this.row.value
+                this.row.value = !this.row.value
             },
-            // изменить значение
             changeValue(e) {
-                if (e.target.type == '' || e.target.type == 'text') {
-                    var selectionStart = e.target.selectionStart
-                    var selectionEnd = e.target.selectionEnd
-                    this.row.valueString = e.target.value
-                    this.update()
-                    e.target.selectionStart = selectionStart
-                    e.target.selectionEnd = selectionEnd
-                } else
-                if (e.target.type == 'number')
-                {
-                    this.row.valueNumber = e.target.value
-                    this.update()
-                } else
-                // если тип цели bool...
-                if (e.target.type == 'bool')
-                {
-                    this.row.valueBool = e.target.value
-                    this.update()
-                }
+                var selectionStart = e.target.selectionStart
+                var selectionEnd = e.target.selectionEnd
 
+                this.row.value = e.target.value
+
+                this.update()
+                e.target.selectionStart = selectionStart
+                e.target.selectionEnd = selectionEnd
             },
             changeColorValue(e) {
                 this.row.idValue = this.row.valueIdList = e.target.value

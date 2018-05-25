@@ -11,7 +11,7 @@ product-edit-parameters-modal
                         button.btn.btn-success(type='button', onclick='{ parent.parent.copySpecifications }',
                         title='Скопировать из другого товара')
                             i.fa.fa-copy
-                        //.form-group
+                        .form-group
                             select.form-control(value='{ parent.parent.isAddSpecifications }', onchange='{ parent.parent.typeChange }')
                                 option(value='1') Добавить к существующим
                                 option(value='0') Заменить существующие
@@ -29,11 +29,11 @@ product-edit-parameters-modal
                 specifications: opts.specifications
             }
 
-            /*self.tags['bs-modal'].isAddSpecifications = 1
+            self.tags['bs-modal'].isAddSpecifications = 1
 
             self.tags['bs-modal'].typeChange = e => {
                 self.tags['bs-modal'].isAddSpecifications = e.target.value
-            }*/
+            }
 
             self.tags['bs-modal'].copySpecifications = () => {
                 modals.create('products-list-select-modal', {

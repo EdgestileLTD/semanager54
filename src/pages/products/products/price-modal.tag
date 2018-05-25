@@ -1,7 +1,7 @@
 price-modal
     bs-modal
         #{'yield'}(to="title")
-            .h4.modal-title Цена товаров
+            .h4.modal-title Наценка товаров
         #{'yield'}(to="body")
             form(onchange='{ change }', onkeyup='{ change }')
                 .form-group

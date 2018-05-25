@@ -9,6 +9,7 @@
 | import 'pages/user-reviews.tag'
 | import 'pages/images/images-manager.tag'
 | import 'pages/images/images.tag'
+| import 'pages/files/files.tag'
 | import 'pages/settings/settings.tag'
 | import 'pages/payments/payments.tag'
 | import 'pages/analytics/analytics.tag'
@@ -121,6 +122,7 @@ app
                 news(if='{ tab == "news" }')
                 user-reviews(if='{ tab == "reviews" }')
                 images(if='{ tab == "images" }')
+                files(if='{ tab == "files" }')
                 sections(if='{ tab == "sections" }')
                 analytics(if='{ tab == "analytics" }')
                 settings(if='{ tab == "settings" }')
@@ -197,7 +199,8 @@ app
             {title: 'Публикации', name: 'news', link: 'news', permission: 'news', icon: 'fa-newspaper-o'},
             {title: 'Отзывы', name: 'reviews', link: 'reviews', permission: 'reviews', icon: 'fa-comment-o'},
             {title: 'Разделы', name: 'sections', link: 'sections', permission: 'sections', icon: 'fa-file-text'},
-            {title: 'Картинки', name: 'images', link: 'images/products', permission: 'images', icon: 'fa-picture-o'},
+            {title: 'Картинки', name: 'images', link: 'images', permission: 'images', icon: 'fa-picture-o'},
+            {title: 'Файлы', name: 'files', link: 'files', permission: 'images', icon: 'fa-files-o'},
             {title: 'Настройки', name: 'settings', link: 'settings', permission: '', icon: 'fa-cogs'},
         ]
 

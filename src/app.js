@@ -176,12 +176,33 @@ app.restoreSession = user => {
     })
 }
 
-app.getImageUrl = function (name, section, lang = 'rus') {
-    return `${app.config.projectURL}images/${lang}/${section}/${name}`
+app.clearRelativeLink = function (link) {
+    return link.replace(/(\/){2,}/g, '/')
 }
 
-app.getImagePreviewURL = function (name, section, size = 64, lang = 'rus') {
-    return `${app.config.projectURL}lib/image.php?size=${size}&img=images/${lang}/${section}/${name}`
+app.getImageRelativeUrl = function (path, name, root = '/images') {
+    return name
+        ? app.clearRelativeLink(`${root}/${path}/${name}`)
+        : app.clearRelativeLink(`${root}/${path}`)
+}
+
+app.getImageUrl = function (path, name, root = '/images') {
+    if (process.env.NODE_ENV === 'development') {
+        let url
+        url = name
+            ? app.clearLink(`${app.config.projectURL}${root}/${path}/${name}`)
+            : app.clearLink(`${app.config.projectURL}${root}${path}`)
+        return url
+    }
+    return name
+        ? app.clearLink(`../${root}/${path}/${name}`)
+        : app.clearLink(`../${root}${path}`)
+}
+
+app.getImagePreviewURL = function (path, name, size = 64, root = 'images') {
+    return name
+        ? `${app.config.projectURL}lib/image.php?size=${size}&img=${root}${path}/${name}`
+        : `${app.config.projectURL}lib/image.php?size=${size}&img=${root}/${path}`
 }
 
 app.insertText = function () {

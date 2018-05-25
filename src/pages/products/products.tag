@@ -93,7 +93,7 @@ products
             {title: 'Скидки', name: 'discounts', link: 'discounts', icon: 'fa fa-percent', access: true },
             {title: 'Купоны', name: 'coupons', link: 'coupons', icon: 'fa fa-money', access: true },
             {title: 'Склады', name: 'warehouses', link: 'warehouses', icon: 'fa fa-home', access: true },
-            {title: 'Типы цен', name: 'price-types', link: 'prices-types', icon: 'fa fa-home', access: true },
+            {title: 'Типы цен', name: 'price-types', link: 'price-types', icon: 'fa fa-home', access: true },
         ]
 
         var route = riot.route.create()
