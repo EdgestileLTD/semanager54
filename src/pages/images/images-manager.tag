@@ -1,11 +1,10 @@
-| import 'pages/images/image-gallery.tag'
+| import 'components/filemanager.tag'
 
 images-manager
     .main-container
         .col-md-12
             .row(if='{ !notFound }')
-                .col-sm-10.col-xs-12
-                    image-gallery(name='gallery', dblclick='{ dblclick }', autoselect='{ autoselect }')
+                filemanager(name='gallery', onSelectImage='{ dblclick }')
     style.
         .main-container {
             margin: 10px;
@@ -14,39 +13,37 @@ images-manager
     script(type='text/babel').
         var self = this
 
-
         self.state = {}
-        self.state.section = '';
 
         self.on('update', () => {
-            if (!self.state.section || self.state.section != localStorage.getItem('CMS_section')) {
-                self.update()
-                self.state.section = localStorage.getItem('SE_section')
-                self.state.limit = self.tags.gallery.pages.limit
-                self.state.offset = 0
 
-                self.tags.gallery.update({ params: self.state })
-                self.tags.gallery.reload()
-
-                self.update()
-            }
+            self.update()
+            self.tags.gallery.reload()
+            self.update()
         })
 
         observable.on('images-page-change', (params) => {
             self.state = params
         })
 
-        self.autoselect = item => {
-            window.top.opener.CKEDITOR.tools.callFunction( self.callback, item.imageUrl);
-            window.top.close() ;
-            window.top.opener.focus()
-        }
-
         self.dblclick = e => {
-            self.autoselect(e.item.row)
+
+            let path = self.tags.gallery.path
+            let items = self.tags.gallery.getSelectedFiles()
+
+            if (items.length) {
+                let value = app.getImageRelativeUrl(path, items[0].name, '')
+                let valueAbsolute = app.getImageUrl(path, items[0].name)
+
+                console.log(value)
+
+                window.top.opener.CKEDITOR.tools.callFunction( self.callback, valueAbsolute);
+                window.top.close() ;
+                window.top.opener.focus()
+            }
+
+
         }
-
-
 
         self.menuSelect = (e) => {
             riot.route(`/imageUpload/${e.target.value}`)

@@ -1,5 +1,5 @@
 var API = {
-    version: process.env.NODE_ENV === 'development' ? '2_dev/Shop' : '2/Shop',
+    version: process.env.NODE_ENV === 'development' ? '3/Shop' : '3/Shop',
     url: 'http://upload.beget.edgestile.net/api/',
     complete(params) {
         if (!('notFoundRedirect' in params))

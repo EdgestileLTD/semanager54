@@ -2,7 +2,7 @@ image-gallery
     .form-group
         .form-inline
             .input-group(class='btn btn-primary btn-file', if='{ checkPermission("images", "0100") }')
-                input(id="importFile", name='files', onchange='{ upload }', type='file', multiple='multiple', accept='image/*')
+                input(name='files', onchange='{ upload }', type='file', multiple='multiple', accept='image/*')
                 i.fa.fa-plus
                 |  Добавить
             button.btn.btn-danger(if='{ selectedCount && checkPermission("images", "0001") }', onclick='{ remove }', title='Удалить', type='button')
@@ -180,17 +180,11 @@ image-gallery
                 data: formData,
                 success(response) {
                     items.forEach(function (item) {
-                        self.items = [...response.items, ...self.items]
+                        self.items = [...[{name: item}], ...self.items]
                     })
-
                     self.update()
-
-                    if (typeof(opts.autoselect) === 'function') {
-                        opts.autoselect.bind(self)(response.items[0])
-                    }
                 }
             })
-            $("#importFile").val(undefined)
         }
 
         self.one('updated', function () {

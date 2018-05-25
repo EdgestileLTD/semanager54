@@ -1,14 +1,8 @@
-| import 'pages/images/images-gallery-modal.tag'
-
+| import 'pages/images/images-modal.tag'
 
 image-select
-    .image(style='background-image: url({ item.imageUrlPreview });')
-        .image-select.text-center(if='{ uploadStatus === 0 }')
-            .form-group(if='{ checkPermission("images", "0100") }')
-                .input-group.btn.btn-sm.btn-primary.btn-file(style='margin: 0 auto;')
-                    input(onchange='{ upload }', type='file', accept='image/*')
-                    i.fa.fa-fw.fa-upload
-                    |  Загрузить
+    .image(style='background-image: url({ valueAbsolute });')
+        .image-select.text-center
             .form-group(if='{ checkPermission("images", "0010") }')
                 button.btn.btn-sm.btn-success(onclick='{ select }', type='button')
                     i.fa.fa-fw.fa-picture-o
@@ -17,8 +11,6 @@ image-select
                 button.btn.btn-sm.btn-danger(onclick='{ remove }', type='button')
                     i.fa.fa-fw.fa-trash
                     |  Очистить
-        .image-upload.text-center(if='{ uploadStatus > 0 }')
-            h3.image-upload-percent { uploadStatus }%
 
 
     style(scoped).
@@ -27,7 +19,7 @@ image-select
             position: relative;
             background-position: center;
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: contain;
             width: 100%;
             height: 170px;
         }
@@ -72,17 +64,11 @@ image-select
             vertical-align: middle;
         }
 
-        .image-upload-percent {
-            color: #FFF;
-            text-shadow: 0 0 1px black, 1px 1px 2px black;
-        }
-
     script(type='text/babel').
         var self = this
 
         self.mixin('permissions')
-        self.uploadStatus = 0
-        self.item = {}
+        self.value = ''
 
         function changeEvent() {
             var event = document.createEvent('Event')
@@ -92,65 +78,36 @@ image-select
 
         Object.defineProperty(self.root, 'value', {
             get() {
-                return self.item.image
+                return self.value
             },
             set(value) {
-                self.item.image = value
-                self.item.imageFile = 'images/' + opts.section + '/' + value
-                self.item.imageUrlPreview = app.getImagePreviewURL(value, opts.section, opts.size)
+                self.value = value
+                self.valueAbsolute = app.getImageUrl(value)
             }
         })
 
-        self.upload = e => {
-            var formData = new FormData();
-
-            for (var i = 0; i < e.target.files.length; i++) {
-                formData.append('file' + i, e.target.files[i], e.target.files[i].name)
-            }
-
-            API.upload({
-                section: opts.section,
-                count: 1,
-                data: formData,
-                progress(e) {
-                    var percentComplete = Math.ceil(e.loaded / e.total * 100)
-                    self.uploadStatus = percentComplete
-                    self.update()
-                },
-                success(response) {
-                    self.item.image = response.items[0].name
-                    changeEvent()
-                    self.update()
-                },
-                complete() {
-                    self.uploadStatus = 0
-                    self.update()
-                }
-            })
-        }
-
         self.select = () => {
-            modals.create('images-gallery-modal', {
+            modals.create('images-modal', {
                 type: 'modal-primary',
-                section: opts.section,
+                size: 'modal-lg',
                 submit: function () {
-                    var items = this.tags.gallery.tags.datatable.getSelectedRows()
+                    let filemanager = this.tags.filemanager
+                    let items = filemanager.getSelectedFiles()
+                    let path = filemanager.path
 
                     if (items.length) {
-                        self.item.image = items[0].name
+                        self.value = app.getImageRelativeUrl(path, items[0].name, '')
+                        self.valueAbsolute = app.getImageUrl(path, items[0].name)
                         changeEvent()
                         self.update()
+                        this.modalHide()
                     }
-
-                    this.modalHide()
                 }
             })
         }
 
         self.remove = () => {
-            self.item.image = ''
-            self.item.imageFile = ''
-            self.item.imageUrlPreview = ''
+            self.value = ''
             changeEvent()
         }
 

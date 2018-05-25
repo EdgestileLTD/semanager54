@@ -818,6 +818,13 @@ product-edit
             observable.trigger('products-edit', self.item.id)
         }
 
+        observable.on('product-new', () => {
+            self.error = false
+            self.item = {}
+            self.isNew = true
+            self.update()
+        })
+
         // Продукты-редактировать
         observable.on('products-edit', id => {
             self.error = false

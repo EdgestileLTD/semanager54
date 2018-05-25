@@ -187,27 +187,13 @@ products-list
                         span(style='color: #ccc')  { row.nameFront !== null && row.nameFront !== "" ? "" : row.nameFlang !== null && row.nameFlang !== "" ? row.nameFlang : row.titleCurr }
                     datatable-cell(name='nameBrand', style="max-width: 80px; overflow: hidden; text-overflow: ellipsis;") { row.nameBrand }
                     datatable-cell(name='nameGroup', style="max-width: 100px; overflow: hidden; text-overflow: ellipsis;") { row.nameGroup }
-                    datatable-cell(name='enabled')
+                    datatable-cell(name='isActive')
                         button.btn.btn-default.btn-sm(type='button',
                         onclick='{ handlers.permission(handlers.boolChange, "products", "0010") }',
                         ontouchend='{ handlers.permission(handlers.boolChange, "products", "0010") }',
                         ontouchstart='{ stopPropagation }',
                         disabled='{ !handlers.checkPermission("products", "0010") }')
-                            i(class='fa { row.enabled == "Y" ? "fa-eye text-active" : "fa-eye-slash text-noactive" } ')
-                    datatable-cell(name='flagNew')
-                        button.btn.btn-default.btn-sm(type='button',
-                        onclick='{ handlers.permission(handlers.boolChange, "products", "0010") }',
-                        ontouchend='{ handlers.permission(handlers.boolChange, "products", "0010") }',
-                        ontouchstart='{ stopPropagation }',
-                        disabled='{ !handlers.checkPermission("products", "0010") }')
-                            i(class='fa { row.flagNew == "Y" ? "fa-asterisk text-active" : "fa-asterisk text-noactive" } ')
-                    datatable-cell(name='flagHit')
-                        button.btn.btn-default.btn-sm(type='button',
-                        onclick='{ handlers.permission(handlers.boolChange, "products", "0010") }',
-                        ontouchend='{ handlers.permission(handlers.boolChange, "products", "0010") }',
-                        ontouchstart='{ stopPropagation }',
-                        disabled='{ !handlers.checkPermission("products", "0010") }')
-                            i(class='fa { row.flagHit == "Y" ? "fa-star text-active" : "fa-star text-noactive" } ')
+                            i(class='fa { row.isActive ? "fa-eye text-active" : "fa-eye-slash text-noactive" } ')
                     datatable-cell(name='isMarket')
                         button.btn.btn-default.btn-sm(type='button',
                         onclick='{ handlers.permission(handlers.boolChange, "products", "0010") }',
@@ -215,14 +201,6 @@ products-list
                         ontouchstart='{ stopPropagation }',
                         disabled='{ !handlers.checkPermission("products", "0010") }')
                             i(class='fa { row.isMarket ? "fa-money text-active" : "fa-money text-noactive" } ')
-                    datatable-cell(name='specialOffer')
-                        button.btn.btn-default.btn-sm(type='button',
-                        onclick='{ handlers.permission(handlers.boolChange, "products", "0010") }',
-                        ontouchend='{ handlers.permission(handlers.boolChange, "products", "0010") }',
-                        ontouchstart='{ stopPropagation }',
-                        disabled='{ !handlers.checkPermission("products", "0010") }')
-                            i(class='fa { row.specialOffer == "Y" ? "fa-check text-active" : "fa-check text-noactive" } ')
-
 
 
     style(scoped).
@@ -251,49 +229,8 @@ products-list
         self.labels = []
         self.categoryFilters = false
 
-        self.add = e => {
-            /*
-            * СОЗДАНИЕ ТОВАРА
-            * получаем базовыю валюту
-            * формируем данные: name, idGroup, idBrand, curr
-            * передаем в Product Save
-            */
-            API.request({
-                object: 'Main',
-                method: 'Info',
-                data: {},
-                success(response) {
-                    self.basecurr = response.basecurr
-                    modals.create('product-new-modal', {
-                        type: 'modal-primary',
-                        submit() {
-                            var _this = this
-                            var params = {
-                                name: this.name.value,
-                                idGroup: self.selectedCategory,
-                                idBrand: self.selectedBrand,
-                                curr: self.basecurr
-                            }
-                            _this.error = _this.validation.validate(_this.item, _this.rules)
-                            if (!_this.error) {
-                                API.request({
-                                    object: 'Product',
-                                    method: 'Save',
-                                    data: params,
-                                    success(response, xhr) {
-                                        popups.create({title: 'Успех!', text: 'Товар добавлен!', style: 'popup-success'})
-                                        _this.modalHide()
-                                        self.tags.catalog.reload()
-                                        if (response && response.id)
-                                            riot.route(`/products/${response.id}`)
-                                    }
-                                })
-                            }
-                        }
-                    })
-                }
-            })
-        }
+        self.add = () => riot.route('/products/new')
+
         self.cols = [
             { name:'id', value:'#'},
             { name: 'img', value: 'Фото'},

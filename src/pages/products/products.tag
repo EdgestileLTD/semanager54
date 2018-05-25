@@ -18,6 +18,10 @@
 | import 'pages/delivery/delivery-edit.tag'
 | import 'pages/products/labels/labels-list.tag'
 | import 'pages/products/labels/label-edit.tag'
+| import 'pages/products/warehouses/warehouses-list.tag'
+| import 'pages/products/warehouses/warehouse-edit.tag'
+| import 'pages/products/price-types/price-types-list.tag'
+| import 'pages/products/price-types/price-type-edit.tag'
 
 
 
@@ -62,6 +66,12 @@ products
         coupons-list(if='{ tab == "coupons" && !edit }')
         coupon-edit(if='{ tab == "coupons" && edit }')
 
+        warehouses-list(if='{ tab == "warehouses" && !edit }')
+        warehouse-edit(if='{ tab == "warehouses" && edit }')
+
+        price-types-list(if='{ tab == "price-types" && !edit }')
+        price-type-edit(if='{ tab == "price-types" && edit }')
+
     script(type='text/babel').
         var self = this
 
@@ -82,6 +92,8 @@ products
             {title: 'Доставка', name: 'delivery', link: 'delivery', icon: 'fa fa-truck', access: true},
             {title: 'Скидки', name: 'discounts', link: 'discounts', icon: 'fa fa-percent', access: true },
             {title: 'Купоны', name: 'coupons', link: 'coupons', icon: 'fa fa-money', access: true },
+            {title: 'Склады', name: 'warehouses', link: 'warehouses', icon: 'fa fa-home', access: true },
+            {title: 'Типы цен', name: 'price-types', link: 'prices-types', icon: 'fa fa-home', access: true },
         ]
 
         var route = riot.route.create()
@@ -133,6 +145,21 @@ products
         route('/products/labels/new', tab => {
             self.update({edit: true, tab: 'labels'})
             observable.trigger('label-new')
+        })
+
+        route('/products/warehouses/new', tab => {
+            self.update({edit: true, tab: 'warehouses'})
+            observable.trigger('warehouse-new')
+        })
+
+        route('/products/price-types/new', tab => {
+            self.update({edit: true, tab: 'price-types'})
+            observable.trigger('price-type-new')
+        })
+
+        route('/products/new', tab => {
+            self.update({edit: true, tab: 'products'})
+            observable.trigger('product-new')
         })
 
 
